@@ -1,10 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShareBytes extends StatefulWidget {
   const ShareBytes({super.key});
@@ -59,15 +61,25 @@ class _ShareBytesState extends State<ShareBytes> {
                   InheritedTheme.captureAll(
                       context, Material(child: container)),
                   delay: const Duration(seconds: 1));
+              String packageName = "com.example.intent_testing";
+              String url = "wasimapp://share";
+              if (await canLaunch(url)) {
+                await launch(url);
+              } else {
+                throw 'Could not launch $url';
+              }
+              // String base64Image = const Base64Encoder().convert(capturedImage);
+              // Share.share(base64Image);
+              // Share.share(base64Decode(base64Image));
 
-              final directory = await getTemporaryDirectory();
-              final filePath =
-                  '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-              print(filePath);
-              final file = File(filePath);
-              await file.writeAsBytes(capturedImage);
+              // final directory = await getTemporaryDirectory();
+              // final filePath =
+              //     '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+              // print(filePath);
+              // final file = File(filePath);
+              // await file.writeAsBytes(capturedImage);
 
-              Share.shareFiles([filePath]);
+              // Share.shareFiles([filePath]);
             },
           ),
         ),
